@@ -1,11 +1,13 @@
 # Filesystem and Encyption
-
 In this assignment you will be be updating the xv6 filesystem to read and write encrypted files
 
-## Required Changes 
+## Groups
+You may work on this assignment in groups of up to 2 members. Group members must be in the same course section.
+
+## Kernel Mode
 
 ### int encrypt(  int fd, uint8 key )
-This system call will encrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR encryption on the file.  
+This system call will encrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR encryption on the file. 
 
 Attempting to encrypt a file that is already encrypted will return -1 and no change will be made to the file.
 
@@ -20,61 +22,23 @@ You will update the file struct and the in-memory inode structure to track if a 
 ### iupdate() and ilock() (fs.c)
 Copy the encrypted status to and from the inode
 
-### stat
-update the stat struct to add the encrypted status of the given file
-
-## stati() (fs.c)
+### stati() (fs.c)
 Copy the encrypted status from the inode
 
+## User Space
 
+### stat
+Update the stat struct to add the encrypted status of the given file
 
+### cat
+Update cat.c so that encrypted files will not be printed. If cat is passed an encrypted file it should return: "Error: File is encrypted.". Ensure the print statement is exactly as specified.
 
+### grep
+Update grep.c so that encrypted file will not be search. If grep is passed an encrypted file it should return: "Error: File is encrypted.". Ensure the print statement is exactly as specified.
 
-Your ps application will print the following:
+### wc
+Update wc.c so that encrypted file will not be processed. If wc is passed an encrypted file it should return: "Error: File is encrypted.". Ensure the print statement is exactly as specified.
 
-```
-NAME    PID     STATUS      COLOR    TICKETS
-init    1       SLEEPING    RED      10    
-sh      2       SLEEPING    ORANGE   2
-test    4       SLEEPING    RED      4
-ps      6       RUNNING     INDIGO   1
-```
-
-### The scheduler
-
-~Most of the code for the scheduler is quite localized and can be found in proc.c; the associated header file, proc.h is also quite useful to examine. To change the scheduler, not much needs to be done; study its control flow and then try some small changes.~
-
-You'll need to assign tickets to a process when it is created. Specfically, you'll need to make sure a child process inherits the same number of tickets as its parents. Thus, if the parent has 10 tickets, and calls fork() to create a child process, the child should also get 10 tickets.
-
-You'll also need to figure out how to generate random numbers in the kernel; some searching should lead you to a simple pseudo-random number generator, which you can then include in the kernel and use as appropriate.
-
-Finally, you'll need to understand how to fill in the structure pstat in the kernel and pass the results to user space. The structure should look like what you see here, in a file you'll have to include called pstat.h:
-
-
-```c
-#ifndef _PSTAT_H_
-#define _PSTAT_H_
-
-#include "param.h"
-
-struct pstat {
-  char name[NPROC][16];        // name of the process
-  enum procstate state[NPROC]; // state of the process   
-  int inuse[NPROC];            // whether this slot of the process table is in use (1 or 0)
-  int tickets[NPROC];          // the number of tickets this process has
-  int pid[NPROC];              // the PID of each process
-  enum COLOR color[NPROC];     // the color of the proces
-  int ticks[NPROC];            // the number of ticks each process has accumulated 
-};
-
-#endif // _PSTAT_H_
-```
-## Graph and Test Application
-
-~You'll have to make a graph for this assignment. The graph should show the number of time slices a set of three processes receives~
-~over time, where the processes have a 3:2:1 ratio of tickets (e.g., process A might have 30 tickets, process B 20, and process C 10). The graph is likely to be pretty boring, but should clearly show that your lottery scheduler works as desired.  The graph must be submitted as a PDF file at the top level of your repo.~
-
-~To gather this data you will need to write an application that forks three children and each child runs measuring the amount of the processor time each gets.~
 
 ## SUBMITTING
 

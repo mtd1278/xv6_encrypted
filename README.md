@@ -22,6 +22,9 @@ You will update the file structure and the in-memory inode structure to track if
 ### iupdate() and ilock() (fs.c)
 Copy the encrypted status to and from the inode
 
+### iget() (fs.c)
+Initialize the encrypted status 
+
 ### stati() (fs.c)
 Copy the encrypted status from the inode
 

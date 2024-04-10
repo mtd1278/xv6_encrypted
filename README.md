@@ -1,27 +1,34 @@
-# Scheduler and System Calls
+# Filesystem and Encyption
 
-In this assignment you will be implementing a lottery scheduler, the user program _ps_, and a number of system calls.
+In this assignment you will be be updating the xv6 filesystem to read and write encrypted files
 
-## System Calls
+## Required Changes 
 
-### int setColor(enum COLOR )
-You will implement a system call that will set an attribute, color, of a process.  The valid colors a process can be assigned are RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, and VIOLET.  You will store the color of a process in its process control block.  This routine should return 0 if successful, and -1 otherwise (if, for example, the caller passes in an invalid color).
+### int encrypt(  int fd, uint8 key )
+This system call will encrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR encryption on the file.  
 
-### int setTickets(int)
-This system call sets the number of tickets of the calling process. By default, each process should get one ticket; calling this routine makes it such that a process can raise the number of tickets it receives, and thus receive a higher proportion of CPU cycles. This routine should return 0 if successful, and -1 otherwise (if, for example, the caller passes in a number less than one). The number of tickets a process can have an integer value of the range 1 to 256.
+Attempting to encrypt a file that is already encrypted will return -1 and no change will be made to the file.
 
-You'll need to assign tickets to a process when it is created. Specfically, you'll need to make sure a child process inherits the same number of tickets as its parents. Thus, if the parent has 10 tickets, and calls fork() to create a child process, the child should also get 10 tickets.
+### int decrypt(  int fd, uint8 key )
+This system call will decrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR decryption on the file.  
 
-### int getpinfo(struct pstat *)
-The second is int getpinfo(struct pstat *). This routine returns some information about all running processes, including how many times each has been chosen to run and the process ID of each. You will use this system call to build a variant of the command line program ps, which can then be called to see what is going on. The structure pstat is defined below; note, you cannot change this structure, and must use it exactly as is. This routine should return 0 if successful, and -1 otherwise (if, for example, a bad or NULL pointer is passed into the kernel).
+Attempting to decrypt a file that is not encrypted will return -1 and no change will be made to the file.
 
-Good examples of how to pass arguments into the kernel are found in existing system calls. In particular, follow the path of read(), which will lead you to sys_read(), which will show you how to use argptr() (and related calls) to obtain a pointer that has been passed into the kernel. Note how careful the kernel is with pointers passed from user space -- they are a security threat, and thus must be checked very carefully before usage.
+### struct file and struct (file.c/h)
+You will update the file struct and the in-memory inode structure to track if a file has been encrypted. 
 
-### Pseudo random number generator
+### iupdate() and ilock() (fs.c)
+Copy the encrypted status to and from the inode
 
-You'll need to add a function to generate random numbers in the kernel; some searching should lead you to a simple pseudo-random number generator, which you can then include in the kernel and use as appropriate.  This is the only code you may use from an external source.
+### stat
+update the stat struct to add the encrypted status of the given file
 
-### ps
+## stati() (fs.c)
+Copy the encrypted status from the inode
+
+
+
+
 
 Your ps application will print the following:
 

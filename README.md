@@ -1,5 +1,5 @@
 # Filesystem and Encyption
-In this assignment you will be be updating the xv6 filesystem to read and write encrypted files. 
+In this assignment you will be be updating the xv6 filesystem to encrypt and decrypt files.  You will add the enncrypted status to the inode structures.  You will also modify the user applications to take this into account and not perform operations on encrypted files.
 
 ## Groups
 You may work on this assignment in groups of up to 2 members. Group members must be in the same course section.

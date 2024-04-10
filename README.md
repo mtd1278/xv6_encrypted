@@ -1,5 +1,5 @@
 # Filesystem and Encyption
-In this assignment you will be be updating the xv6 filesystem to read and write encrypted files
+In this assignment you will be be updating the xv6 filesystem to read and write encrypted files. 
 
 ## Groups
 You may work on this assignment in groups of up to 2 members. Group members must be in the same course section.
@@ -7,17 +7,17 @@ You may work on this assignment in groups of up to 2 members. Group members must
 ## Kernel Mode
 
 ### int encrypt(  int fd, uint8 key )
-This system call will encrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR encryption on the file. 
+This system call will encrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR encryption on the file using the provided key. 
 
 Attempting to encrypt a file that is already encrypted will return -1 and no change will be made to the file.
 
 ### int decrypt(  int fd, uint8 key )
-This system call will decrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR decryption on the file.  
+This system call will decrypt the file represented by the file descriptor, fd.  The system call will perform a byte-by-byte XOR decryption on the file using the provided key.  
 
 Attempting to decrypt a file that is not encrypted will return -1 and no change will be made to the file.
 
 ### struct file and struct (file.c/h)
-You will update the file struct and the in-memory inode structure to track if a file has been encrypted. 
+You will update the file structure and the in-memory inode structure to track if a file has been encrypted. 
 
 ### iupdate() and ilock() (fs.c)
 Copy the encrypted status to and from the inode

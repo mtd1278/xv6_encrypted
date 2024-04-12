@@ -1,8 +1,8 @@
 # Filesystem and Encyption
-In this assignment you will be be updating the xv6 filesystem to encrypt and decrypt files.  You will add the enncrypted status to the inode structures.  You will also modify the user applications to take this into account and not perform operations on encrypted files.
+In this assignment you will be be updating the xv6 filesystem to encrypt and decrypt files.  You will add the encrypted status to the inode structures.  You will also modify the user applications to take this into account and not perform operations on encrypted files.
 
 ## Groups
-You may work on this assignment in groups of up to 2 members. Group members must be in the same course section.
+You may work on this assignment in groups of up to 2 members. Group members must be in the same course section.  If you wish to be in a grop you must add your group information to the spreadsheet in the Canvas assignment.
 
 ## Kernel Mode
 

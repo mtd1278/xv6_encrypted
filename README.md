@@ -28,10 +28,10 @@ Initialize the encrypted status
 ### stati() (fs.c)
 Copy the encrypted status from the inode
 
-## User Space
-
 ### stat
 Update the stat struct to add the encrypted status of the given file.
+
+## User Space
 
 ### cat
 Update cat.c so that encrypted files will not be printed. If cat is passed an encrypted file it should print: "Error: File is encrypted.". Ensure the print statement is exactly as specified. On failure a -1 will be returned.

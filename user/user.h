@@ -1,5 +1,5 @@
 struct stat;
-
+struct file;
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -22,8 +22,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int encrypt(void);
-int decrypt(void);
+int encrypt(int fd, uint8 key);
+int decrypt(int fd, uint8 key);
 
 
 // ulib.c

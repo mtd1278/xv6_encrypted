@@ -179,34 +179,9 @@ filewrite(struct file *f, uint64 addr, int n)
 
   return ret;
 }
-/*
-int
-fileread(struct file *f, uint64 addr, int n)
-{
-  int r = 0;
 
-  if(f->readable == 0)
-    return -1;
-
-  if(f->type == FD_PIPE){
-    r = piperead(f->pipe, addr, n);
-  } else if(f->type == FD_DEVICE){
-    if(f->major < 0 || f->major >= NDEV || !devsw[f->major].read)
-      return -1;
-    r = devsw[f->major].read(1, addr, n);
-  } else if(f->type == FD_INODE){
-    ilock(f->ip);
-    if((r = readi(f->ip, 1, addr, f->off, n)) > 0)
-      f->off += r;
-    iunlock(f->ip);
-  } else {
-    panic("fileread");
-  }
-
-  return r;
-}*/
 //////////////////////////////////////////////////////////////////////////// My code 
-int encrypt(struct file *f, int fd, uint8 key)
+int encrypt(struct file *f, uint8 key)
 {
   int r = 0;
   int w = 0;
@@ -221,19 +196,19 @@ int encrypt(struct file *f, int fd, uint8 key)
 
   for (i=0; i < f->ip->size; i++)
   {
-      r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
-      buf = buf ^ key;
-      if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
-      f->off += r;
+    r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+    buf = buf ^ key;
+    if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
+    f->off += r;
   }
-  
  
   f->ip->inode_encrypted = 1; 
-       iunlock(f->ip);
+  iunlock(f->ip);
+  
   return 0;
 }
 
-int decrypt(struct file *f, int fd, uint8 key)
+int decrypt(struct file *f, uint8 key)
 {
   int r = 0;
   int w = 0;

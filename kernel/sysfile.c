@@ -547,32 +547,31 @@ fileread(struct file *f, uint64 addr, int n)
 uint64
 sys_encrypt(void)
 {
-  int fd;
-  argint(1, &fd); // 
+ 
   struct file *f; 
   
   int p; /////
-  argint(2,&p);
+  argint(1,&p);
   
   if(argfd(0, 0, &f) < 0)
     return -1;
-  return encrypt(f, fd, (uint8)p);
+  return encrypt(f, (uint8)p);
   return 0;
 }
 
 uint64
 sys_decrypt(void)
 {
-  int fd;
-  argint(1, &fd); 
+  //int fd;
+ // argint(1, &fd); 
   struct file *f; 
   
   int p;
-  argint(2,&p);
+  argint(1,&p);
 
   if(argfd(0, 0, &f) < 0)
     return -1;
-  return decrypt(f, fd, (uint8)p);
+  return decrypt(f, (uint8)p);
   return 0;
 }
 

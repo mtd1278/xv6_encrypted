@@ -3,7 +3,7 @@
 
 
 #define ROOTINO  1   // root i-number
-#define BSIZE 1024  // block size
+#define BSIZE 1024 // block size
 
 // Disk layout:
 // [ boot block | super block | log | inode blocks |
@@ -38,8 +38,8 @@ struct dinode {
   uint addrs[NDIRECT+1];   // Data block addresses
 
   uint8 dinode_encrypted;
+  char pad[63];
 
-  
 };
 
 // Inodes per block.

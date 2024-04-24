@@ -7,6 +7,9 @@ struct file {
   struct inode *ip;  // FD_INODE and FD_DEVICE
   uint off;          // FD_INODE
   short major;       // FD_DEVICE
+
+  // 
+  bool file_is_encrypted;
 };
 
 #define major(dev)  ((dev) >> 16 & 0xFFFF)
@@ -27,6 +30,9 @@ struct inode {
   short nlink;
   uint size;
   uint addrs[NDIRECT+1];
+
+  //
+  bool inode_is_encrypted; 
 };
 
 // map major device number to device functions.

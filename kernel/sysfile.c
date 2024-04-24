@@ -547,11 +547,48 @@ fileread(struct file *f, uint64 addr, int n)
 uint64
 sys_encrypt(void)
 {
+  int fd;
+  argint(1, &fd); // 1 bc fd is 2nd argument 
+  struct file *f = myproc()->ofile[fd];
+  
+  uint8 p; /////
+  argint(2,&p);
+  
+  if(argfd(0, 0, &f) < 0)
+    return -1;
+  return encrypt(f, fd, p);
   return 0;
 }
 
 uint64
 sys_decrypt(void)
 {
+  int fd;
+  argint(1, &fd); 
+  struct file *f = myproc()->ofile[fd];
+  
+  uint8 p;
+  argint(2,&p);
+
+  if(argfd(0, 0, &f) < 0)
+    return -1;
+  return decrypt(f, fd, p);
   return 0;
 }
+/*// Fetch the nth word-sized system call argument as a file descriptor
+// and return both the descriptor and the corresponding struct file.
+static int
+argfd(int n, int *pfd, struct file **pf)
+{
+  int fd;
+  struct file *f;
+
+  argint(n, &fd);
+  if(fd < 0 || fd >= NOFILE || (f=myproc()->ofile[fd]) == 0)
+    return -1;
+  if(pfd)
+    *pfd = fd;
+  if(pf)
+    *pf = f;
+  return 0;
+}*/

@@ -208,25 +208,56 @@ fileread(struct file *f, uint64 addr, int n)
 //////////////////////////////////////////////////////////////////////////// My code 
 int encrypt(struct file *f, int fd, uint8 key)
 {
+  int r = 0;
+  int w = 0;
+
+  if(f->readable == 0 || f->writable ==0 ) return -1;
+  if (f->file_encrypted == 1) return -1;
+
   ilock(f->ip);
-  if((r = readi(f->ip, 1, key, f->off, fd)) > 0)
+  if((r = readi(f->ip, 1, (uint64)key, f->off, (uint)fd)) > 0) // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
     f->off += r;
   iunlock(f->ip);
   int i;
+  int xor; 
   for (i=0; i < f->ip->size; i++)
   {
-    
+      ilock(f->ip);
+      f->ip->addrs[i] = f->ip->addrs[i] ^ key;
+      if ((w = writei(f->ip->addrs[i], 1, (uint64)key, f->off, (uint)fd)) > 0)
+        f->off += r;
+      unlock(f->ip);
   }
-  f->file_is_encrypted = TRUE; 
+  
+ 
+  f->file_encrypted = 1; 
  
   return 0;
 }
 
 int decrypt(struct file *f, int fd, uint8 key)
 {
+  int r = 0;
+  int w = 0;
 
-  f->file_is_encrypted = FALSE; 
- 
+  if(f->readable == 0 || f->writable ==0 ) return -1;
+  if (f->file_encrypted == 0) return -1;
+
+  ilock(f->ip);
+  if((r = readi(f->ip, 1, (uint64)key, f->off, (uint)fd)) > 0) // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+    f->off += r;
+  iunlock(f->ip);
+  int i;
+  for (i=0; i < f->ip->size; i++)
+  {
+      ilock(f->ip);
+      f->ip->addrs[i] = f->ip->addrs[i] ^ key;
+      if ((w = writei(f->ip->addrs[i], 1, (uint64)key, f->off, (uint)fd)) > 0)
+        f->off += r;
+      unlock(f->ip);
+  }
+
+  f->file_encrypted = 0; 
   return 0;
 }
 

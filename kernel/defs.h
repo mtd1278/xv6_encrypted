@@ -33,8 +33,8 @@ void            fileinit(void);
 int             fileread(struct file*, uint64, int n);
 int             filestat(struct file*, uint64 addr);
 int             filewrite(struct file*, uint64, int n);
-int             encrypt(int n, uint8);
-int             decrypt(int n, uint8);
+int             encrypt(struct file*, int n, uint8);
+int             decrypt(struct file*, int n, uint8);
 
 // fs.c
 void            fsinit(int);

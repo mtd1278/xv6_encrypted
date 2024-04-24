@@ -549,7 +549,7 @@ sys_encrypt(void)
 {
   int fd;
   argint(1, &fd); // 1 bc fd is 2nd argument 
-  struct file *f = myproc()->ofile[fd];
+  struct file *f //= myproc()->ofile[fd];
   
   uint8 p; /////
   argint(2,&p);
@@ -565,7 +565,7 @@ sys_decrypt(void)
 {
   int fd;
   argint(1, &fd); 
-  struct file *f = myproc()->ofile[fd];
+  struct file *f//= myproc()->ofile[fd];
   
   uint8 p;
   argint(2,&p);

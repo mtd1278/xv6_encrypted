@@ -235,6 +235,7 @@ iupdate(struct inode *ip)
   dip->minor = ip->minor;
   dip->nlink = ip->nlink;
   dip->size = ip->size;
+  ip->inode_encrypted = dip->dinode_encrypted; // copy encrypted status to and from the inode 
   memmove(dip->addrs, ip->addrs, sizeof(ip->addrs));
   log_write(bp);
   brelse(bp);
@@ -269,8 +270,9 @@ iget(uint dev, uint inum)
   ip = empty;
   ip->dev = dev;
   ip->inum = inum;
-  ip->ref = 1;
+  ip->ref = 1; 
   ip->valid = 0;
+  ip->inode_encrypted = 0; //initialize the encrypted status 
   release(&itable.lock);
 
   return ip;
@@ -308,6 +310,7 @@ ilock(struct inode *ip)
     ip->minor = dip->minor;
     ip->nlink = dip->nlink;
     ip->size = dip->size;
+    ip->inode_encrypted = dip->dinode_encrypted; // copy encrypted status to and from the inode 
     memmove(ip->addrs, dip->addrs, sizeof(ip->addrs));
     brelse(bp);
     ip->valid = 1;

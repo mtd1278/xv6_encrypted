@@ -36,6 +36,7 @@ int             filewrite(struct file*, uint64, int n);
 int             encrypt(struct file*, int n, uint8);
 int             decrypt(struct file*, int n, uint8);
 
+
 // fs.c
 void            fsinit(int);
 int             dirlink(struct inode*, char*, uint);

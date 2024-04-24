@@ -38,6 +38,8 @@ struct dinode {
   uint addrs[NDIRECT+1];   // Data block addresses
 
   uint8 dinode_encrypted;
+
+  
 };
 
 // Inodes per block.

@@ -9,7 +9,7 @@ struct file {
   short major;       // FD_DEVICE
 
   // update file struct and in-mem node struct to track if a file has been encrypted in a uint8
-  uint8 file_encrypted;
+
 };
 
 #define major(dev)  ((dev) >> 16 & 0xFFFF)
@@ -33,6 +33,7 @@ struct inode {
 
   // update file struct and in-mem node struct to track if a file has been encrypted in a uint8
   uint8 inode_encrypted;
+  
 };
 
 // map major device number to device functions.

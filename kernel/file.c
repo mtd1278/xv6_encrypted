@@ -212,26 +212,24 @@ int encrypt(struct file *f, int fd, uint8 key)
   int w = 0;
 
   if(f->readable == 0 || f->writable ==0 ) return -1;
-  if (f->file_encrypted == 1) return -1;
+  if (f->ip->inode_encrypted == 1) return -1;
 
-  ilock(f->ip);
-  if((r = readi(f->ip, 1, (uint64)key, f->off, (uint)fd)) > 0) // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
-    f->off += r;
-  iunlock(f->ip);
+  char buf; 
+  
   int i;
-  int xor; 
+    ilock(f->ip);
+
   for (i=0; i < f->ip->size; i++)
   {
-      ilock(f->ip);
-      f->ip->addrs[i] = f->ip->addrs[i] ^ key;
-      if ((w = writei(f->ip->addrs[i], 1, (uint64)key, f->off, (uint)fd)) > 0)
-        f->off += r;
-      unlock(f->ip);
+      r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+      buf = buf ^ key;
+      if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
+      f->off += r;
   }
   
  
-  f->file_encrypted = 1; 
- 
+  f->ip->inode_encrypted = 1; 
+       iunlock(f->ip);
   return 0;
 }
 
@@ -241,25 +239,27 @@ int decrypt(struct file *f, int fd, uint8 key)
   int w = 0;
 
   if(f->readable == 0 || f->writable ==0 ) return -1;
-  if (f->file_encrypted == 0) return -1;
+  if (f->ip->inode_encrypted == 0) return -1;
 
-  ilock(f->ip);
-  if((r = readi(f->ip, 1, (uint64)key, f->off, (uint)fd)) > 0) // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
-    f->off += r;
-  iunlock(f->ip);
+  char buf; 
+  
   int i;
+    ilock(f->ip);
+
   for (i=0; i < f->ip->size; i++)
   {
-      ilock(f->ip);
-      f->ip->addrs[i] = f->ip->addrs[i] ^ key;
-      if ((w = writei(f->ip->addrs[i], 1, (uint64)key, f->off, (uint)fd)) > 0)
-        f->off += r;
-      unlock(f->ip);
+      r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+      buf = buf ^ key;
+      if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
+      f->off += r;
   }
+  iunlock(f->ip);
 
-  f->file_encrypted = 0; 
+  f->ip->inode_encrypted = 0;
   return 0;
 }
+
+
 
 /*// Read data from inode.
 // Caller must hold ip->lock.

@@ -30,14 +30,25 @@ main(int argc, char *argv[])
     cat(0);
     exit(0);
   }
+  
+  struct stat status;
+ 
 
   for(i = 1; i < argc; i++){
-    if((fd = open(argv[i], 0)) < 0){
+
+    fd = open(argv[i], 2); ////////////////////
+    fileread()
+    if (status.encryptStat == 1)
+    {
+      printf("Error: File is encrypted.");
+      return -1;
+    }
+    if((fd = open(argv[i], 0)) < 0)
       fprintf(2, "cat: cannot open %s\n", argv[i]);
       exit(1);
     }
     cat(fd);
     close(fd);
-  }
+  
   exit(0);
 }

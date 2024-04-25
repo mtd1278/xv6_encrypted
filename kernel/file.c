@@ -183,7 +183,7 @@ filewrite(struct file *f, uint64 addr, int n)
 //////////////////////////////////////////////////////////////////////////// My code 
 int encrypt(struct file *f, uint8 key)
 {
-  int r = 0;
+  //int r = 0;
   int w = 0;
   int i;
 
@@ -198,21 +198,21 @@ int encrypt(struct file *f, uint8 key)
   
   for (i=0; i < f->ip->size; i++)
   {
-    r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+    readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
     buf = buf ^ key;
-    if ((w = writei(f->ip, 0, (uint64)(&buf), f->off, 1)) > 0)
-    f->off += r;
+    if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
+    f->off += w;
    }
   f->ip->inode_encrypted = 1; 
   iunlock(f->ip);
   end_op();
+  
   return 0;
- 
 }
 
 int decrypt(struct file *f, uint8 key)
 {
-  int r = 0;
+  //int r = 0;
   int w = 0;
 
   if(f->readable == 0 || f->writable ==0 ) return -1;
@@ -226,14 +226,15 @@ int decrypt(struct file *f, uint8 key)
 
   for (i=0; i < f->ip->size; i++)
   {
-      r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
-      buf = buf ^ key;
-      if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
-      f->off += r;
+    readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
+    buf = buf ^ key;
+    if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
+    f->off += w;
   }
+  f->ip->inode_encrypted = 0;
   iunlock(f->ip);
   end_op();
-  f->ip->inode_encrypted = 0;
+  
   return 0;
 }
 

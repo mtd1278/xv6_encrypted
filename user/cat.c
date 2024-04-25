@@ -32,17 +32,16 @@ main(int argc, char *argv[])
   }
   
   struct stat status;
+  fd = open(argv[1], 2); ////////////////////
+  fstat(fd, &status);
+  printf("encryptStat = %d\n", status.encryptStat);
+  if (status.encryptStat == 1)
+  {
+    printf("Error: File is encrypted.");
+    return -1;
+  }
   
-
   for(i = 1; i < argc; i++){
-
-    fd = open(argv[i], 2); ////////////////////
-    fstat(fd, &status);
-    if (status.encryptStat == 1)
-    {
-      printf("Error: File is encrypted.");
-      return -1;
-    }
     if((fd = open(argv[i], 0)) < 0)
     {
       fprintf(2, "cat: cannot open %s\n", argv[i]);

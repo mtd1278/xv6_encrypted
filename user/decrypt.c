@@ -5,9 +5,11 @@
 
 int main(int argc, char *argv[])
 {
-    int fd =0;
     uint8 key = 9;
-    fd = open(argv[1], 2);
-    decryptcrypt(fd, key);
+    int fd = open(argv[1], 2);
+    decrypt(fd, key);
+    struct stat status;
+    fstat(fd, &status);
+    printf("encryptStat = %d\n", status.encryptStat);
     exit(0);
 }

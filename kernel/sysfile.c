@@ -556,7 +556,6 @@ sys_encrypt(void)
   if(argfd(0, 0, &f) < 0)
     return -1;
   return encrypt(f, (uint8)p);
-  return 0;
 }
 
 uint64
@@ -572,7 +571,6 @@ sys_decrypt(void)
   if(argfd(0, 0, &f) < 0)
     return -1;
   return decrypt(f, (uint8)p);
-  return 0;
 }
 
 /*// Fetch the nth word-sized system call argument as a file descriptor

@@ -204,6 +204,7 @@ int encrypt(struct file *f, uint8 key)
     f->off += w;
    }
   f->ip->inode_encrypted = 1; 
+  iupdate(f->ip);
   iunlock(f->ip);
   end_op();
   
@@ -232,6 +233,7 @@ int decrypt(struct file *f, uint8 key)
     f->off += w;
   }
   f->ip->inode_encrypted = 0;
+  iupdate(f->ip);
   iunlock(f->ip);
   end_op();
   

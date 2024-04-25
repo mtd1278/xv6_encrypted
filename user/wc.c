@@ -47,7 +47,7 @@ main(int argc, char *argv[])
   fstat(fd, &status);
   if (status.encryptStat == 1)
   {
-    printf("Error: File is encrypted.");
+    printf("Error: File is encrypted.\n");
     return -1;
   }
 

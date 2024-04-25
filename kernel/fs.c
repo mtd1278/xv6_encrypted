@@ -235,7 +235,7 @@ iupdate(struct inode *ip)
   dip->minor = ip->minor;
   dip->nlink = ip->nlink;
   dip->size = ip->size;
-  ip->inode_encrypted = dip->dinode_encrypted; // copy encrypted status to and from the inode 
+  dip->dinode_encrypted = ip->inode_encrypted; // copy encrypted status to and from the inode 
   memmove(dip->addrs, ip->addrs, sizeof(ip->addrs));
   log_write(bp);
   brelse(bp);

@@ -154,9 +154,9 @@ filewrite(struct file *f, uint64 addr, int n)
     // might be writing a device like the console.
     int max = ((MAXOPBLOCKS-1-1-2) / 2) * BSIZE;
     int i = 0;
-    while(i < n){
-      int n1 = n - i;
-      if(n1 > max)
+    while(i < n){ 
+      int n1 = n - i; 
+      if(n1 > max) 
         n1 = max;
 
       begin_op();
@@ -191,20 +191,37 @@ int encrypt(struct file *f, uint8 key)
 
   char buf; 
   
+ 
+  int max = ((MAXOPBLOCKS-1-1-2) / 2) * BSIZE;
+  int n = 8;
+  int j = 0;
+
   int i;
     ilock(f->ip);
+    begin_op();
 
   for (i=0; i < f->ip->size; i++)
   {
     r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
     buf = buf ^ key;
-    if ((w = writei(f->ip, 0, (uint64)&buf, f->off, 1)) > 0)
+    while(j < n)
+    { 
+    int n1 = n - j; 
+    if(n1 > max) n1 = max;
+
+    if ((w = writei(f->ip, 0, (uint64)(&buf+j), f->off, n1)) > 0)
     f->off += r;
+    if(w != n1)
+    {
+      // error from writei
+      break;
+    }
+    j += r;
+    }
   }
- 
   f->ip->inode_encrypted = 1; 
   iunlock(f->ip);
-  
+  end_op();
   return 0;
 }
 

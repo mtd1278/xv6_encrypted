@@ -185,21 +185,19 @@ int encrypt(struct file *f, uint8 key)
 {
   int r = 0;
   int w = 0;
+  int i;
 
   if(f->readable == 0 || f->writable ==0 ) return -1;
   if (f->ip->inode_encrypted == 1) return -1;
 
   char buf; 
-  
- 
   int max = ((MAXOPBLOCKS-1-1-2) / 2) * BSIZE;
   int n = 8;
   int j = 0;
-
-  int i;
-    ilock(f->ip);
-    begin_op();
-
+ 
+  begin_op();
+  ilock(f->ip);
+  
   for (i=0; i < f->ip->size; i++)
   {
     r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)

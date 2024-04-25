@@ -191,9 +191,7 @@ int encrypt(struct file *f, uint8 key)
   if (f->ip->inode_encrypted == 1) return -1;
 
   char buf; 
-  int max = ((MAXOPBLOCKS-1-1-2) / 2) * BSIZE;
-  int n = 8;
-  int j = 0;
+  
  
   begin_op();
   ilock(f->ip);
@@ -202,25 +200,14 @@ int encrypt(struct file *f, uint8 key)
   {
     r = readi(f->ip, 0, (uint64)&buf, f->off, 1); // readi(struct inode *ip, int user_dst, uint64 dst, uint off, uint n)
     buf = buf ^ key;
-    while(j < n)
-    { 
-    int n1 = n - j; 
-    if(n1 > max) n1 = max;
-
-    if ((w = writei(f->ip, 0, (uint64)(&buf+j), f->off, n1)) > 0)
+    if ((w = writei(f->ip, 0, (uint64)(&buf), f->off, 1)) > 0)
     f->off += r;
-    if(w != n1)
-    {
-      // error from writei
-      break;
-    }
-    j += r;
-    }
-  }
+   }
   f->ip->inode_encrypted = 1; 
   iunlock(f->ip);
   end_op();
   return 0;
+ 
 }
 
 int decrypt(struct file *f, uint8 key)
@@ -234,6 +221,7 @@ int decrypt(struct file *f, uint8 key)
   char buf; 
   
   int i;
+  begin_op();
     ilock(f->ip);
 
   for (i=0; i < f->ip->size; i++)
@@ -244,7 +232,7 @@ int decrypt(struct file *f, uint8 key)
       f->off += r;
   }
   iunlock(f->ip);
-
+  end_op();
   f->ip->inode_encrypted = 0;
   return 0;
 }

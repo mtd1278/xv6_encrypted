@@ -8,6 +8,6 @@ int main(int argc, char *argv[])
     int fd =0;
     uint8 key = 9;
     fd = open(argv[1], 2);
-    encrypt(fd, key);
+    decryptcrypt(fd, key);
     exit(0);
 }

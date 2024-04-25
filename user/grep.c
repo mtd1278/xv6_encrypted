@@ -50,7 +50,7 @@ main(int argc, char *argv[])
     exit(0);
   }
   struct stat status;
-  fd = open(argv[1], 2); ////////////////////
+  fd = open(argv[2], 2); ////////////////////
   fstat(fd, &status);
   if (status.encryptStat == 1)
   {

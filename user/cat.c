@@ -34,7 +34,7 @@ main(int argc, char *argv[])
   struct stat status;
   fd = open(argv[1], 2); ////////////////////
   fstat(fd, &status);
-  printf("encryptStat = %d\n", status.encryptStat);
+  // printf("encryptStat = %d\n", status.encryptStat); debug 
   if (status.encryptStat == 1)
   {
     printf("Error: File is encrypted.\n");
